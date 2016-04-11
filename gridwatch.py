@@ -29,15 +29,20 @@ def get_data():
     nationalgrid['Frequency'] = float(frequency['ST'][-1]['@VAL'])
     nationalgrid['SystemDemand'] = int(demand['ST'][-1]['@VAL'])
 
-    nationalgrid['GenerationByType'] = {}
-    nationalgrid['Interconnects'] = {}
+    nationalgrid['PowerSources'] = []
 
     for fuel in generation['FUEL']:
-        type = fuel['@TYPE']
+        ps = {}
+        ps['Type'] = fuel['@TYPE']
+        ps['MegaWatts'] = fuel['@VAL']
+        ps['Percentage'] = fuel['@PCT']
         if fuel['@IC'] == 'N':
-            nationalgrid['GenerationByType'][type] = int(fuel['@VAL'])
-        else:
-            nationalgrid['Interconnects'][type] = int(fuel['@VAL'])
+            ps['Interconnect'] = False
+        else :
+            ps['Interconnect'] = True
+
+        nationalgrid['PowerSources'].append(ps)
+
 
     return nationalgrid
 
